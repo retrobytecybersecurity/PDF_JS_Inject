@@ -1,0 +1,17 @@
+from pypdf import PdfReader, PdfWriter
+
+input_pdf = "/home/kali/Desktop/TESTING.pdf"
+output_pdf = "/home/kali/Desktop/injected.pdf"
+
+reader = PdfReader(input_pdf)
+writer = PdfWriter()
+
+for page in reader.pages:
+    writer.add_page(page)
+
+writer.add_js('app.alert("Hello World");')
+
+with open(output_pdf, "wb") as f:
+    writer.write(f)
+
+print(f"Created {output_pdf}")

@@ -1,17 +1,32 @@
+python
 from pypdf import PdfReader, PdfWriter
+import os
 
-input_pdf = "UPDATE"
-output_pdf = "UPDATE"
+# Prompt user for file names
+input_pdf = input("Enter the input PDF filename: ").strip()
+output_pdf = input("Enter the output PDF filename: ").strip()
 
-reader = PdfReader(input_pdf)
-writer = PdfWriter()
+# Validate input file exists
+if not os.path.isfile(input_pdf):
+    print(f"[-] Error: File '{input_pdf}' does not exist.")
+    exit(1)
 
-for page in reader.pages:
-    writer.add_page(page)
+try:
+    reader = PdfReader(input_pdf)
+    writer = PdfWriter()
 
-writer.add_js('app.alert("Hello World");')
+    # Copy all pages
+    for page in reader.pages:
+        writer.add_page(page)
 
-with open(output_pdf, "wb") as f:
-    writer.write(f)
+    # Add JavaScript
+    writer.add_js('app.alert("Hello World");')
 
-print(f"Created {output_pdf}")
+    # Write modified PDF
+    with open(output_pdf, "wb") as f:
+        writer.write(f)
+
+    print(f"[+] Successfully created: {output_pdf}")
+
+except Exception as e:
+    print(f"[-] Error processing PDF: {e}")
